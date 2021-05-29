@@ -1,0 +1,19 @@
+* Carrera : TUDAI
+* Materias :
+	* Programacion 1
+	* Web 1
+	* Ingles 1
+	* Taller de Matematica Computacional
+* Horarios :
+	* Programacion 1:
+		* Comision 0 : 15:00 - 18:00 LUNES
+		* Comision 1 : 18:00 - 21:00 LUNES
+		* Comision 2 : 15:00 - 18:00 MIERCOLES
+	* Web 1:
+		* Comision 0 : 17:00 - 19:00 LUNES
+		* Comision 1 : 10:00 - 12:00 LUNES
+	* Ingles 1 :
+		* Comision 0 : 10:00 - 12:00 JUEVES
+		* Comision 1 : 14:00 - 16:00 MARTES
+	* Taller de Matematica Computacional :
+		* Comision 0 : 11:00 - 13:00 JUEVES

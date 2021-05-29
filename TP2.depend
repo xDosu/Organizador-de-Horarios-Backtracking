@@ -1,0 +1,10 @@
+# depslib dependency file v1.0
+1622310213 source:c:\users\tomy\dropbox\facultad\análisis y diseño de algoritmos ii\laboratorio\tp2\main.cpp
+	<iostream>
+	<string>
+	<list>
+	<map>
+
+1622222730 c:\users\tomy\dropbox\facultad\análisis y diseño de algoritmos ii\laboratorio\tp2\include\materia.h
+	<list>
+
