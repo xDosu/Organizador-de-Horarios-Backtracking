@@ -1,3 +1,4 @@
+----------------------------------
 * Carrera : TUDAI
 * Materias :
 	* Programacion 1
@@ -17,3 +18,4 @@
 		* Comision 1 : 14:00 - 16:00 MARTES
 	* Taller de Matematica Computacional :
 		* Comision 0 : 11:00 - 13:00 JUEVES
+----------------------------------

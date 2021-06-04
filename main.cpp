@@ -21,14 +21,14 @@ Clase Materia
 class Materia
 {
     public:
-        Materia(){};  //Funciona
-        Materia(string nombre);  //Funciona
+        Materia(){};
+        Materia(string nombre);
         virtual ~Materia(){};
         void setNombreMateria(string nombre);
-        void agregarComision(comision c1);  //Funciona
-        string getNombreMateria();  //Funciona
+        void agregarComision(comision c1);
+        string getNombreMateria();
         void getComisiones(list<comision> &comisiones);
-        void imprimirComisiones();  //Funciona
+        void imprimirComisiones();
     private:
         string nombreDeLaMateria;
         list<comision> comisiones;
@@ -43,7 +43,10 @@ void Materia::setNombreMateria(string nombre){
 }
 
 void Materia::agregarComision(comision c1){
-    this->comisiones.push_back(c1);
+    if((c1.comienzoDeLaClase >= 0 & c1.comienzoDeLaClase < 2400) & (c1.finDeLaClase >= 0 & c1.finDeLaClase < 2400 & c1.finDeLaClase > c1.comienzoDeLaClase))
+        this->comisiones.push_back(c1);
+    else
+        cout << "Horario incorrecto" << endl;
 }
 
 string Materia::getNombreMateria(){
@@ -61,15 +64,38 @@ void Materia::getComisiones(list<comision> &comisiones){
 void Materia::imprimirComisiones(){
     list<comision>::iterator iterador = this->comisiones.begin();
     comision c;
-    string horario;
+    string horarioComienzo,horarioFinal;
     while(iterador != this->comisiones.end()){
         c = *iterador;
         cout << "Comision: " << c.nroComision;
         cout << "  Dia: " << c.dia;
-        horario = to_string(c.comienzoDeLaClase);
-        cout << "  Horario: " << horario[0] << horario[1] << ":" << horario[2] << horario[3];
-        horario = to_string(c.finDeLaClase);
-        cout << " -- " << horario[0] << horario[1] << ":" << horario[2] << horario[3] << endl;
+        horarioComienzo = to_string(c.comienzoDeLaClase);
+        horarioFinal = to_string(c.finDeLaClase);
+        if(c.comienzoDeLaClase > 0){
+            if(c.comienzoDeLaClase < 1000){
+                cout << "  Horario: " << 0 << horarioComienzo[0] << ":" << horarioComienzo[1] << horarioComienzo[2];
+                if(c.finDeLaClase < 1000){
+                    cout << " -- " << 0 << horarioFinal[0] << ":" << horarioFinal[1] << horarioFinal[2] << endl;
+                }else{
+                    cout << " -- " << horarioFinal[0] << horarioFinal[1] << ":" << horarioFinal[2] << horarioFinal[3] << endl;
+                }
+            }else{
+                cout << "  Horario: " << horarioComienzo[0] << horarioComienzo[1] << ":" << horarioComienzo[2] << horarioComienzo[3];
+                cout << " -- " << horarioFinal[0] << horarioFinal[1] << ":" << horarioFinal[2] << horarioFinal[3] << endl;
+            }
+        }else{
+            cout << "  Horario: " << "00:00";
+            if(c.finDeLaClase != 0){
+                if(c.finDeLaClase < 1000){
+                    cout << " -- " << 0 << horarioFinal[0] << ":" << horarioFinal[1] << horarioFinal[2] << endl;
+                }else{
+                    cout << " -- " << horarioFinal[0] << horarioFinal[1] << ":" << horarioFinal[2] << horarioFinal[3] << endl;
+                }
+            }else{
+                cout << " -- " << "00:00" << endl;
+            }
+        }
+
         iterador++;
     }
 }
@@ -86,7 +112,7 @@ Declaracion de funciones.
 bool son_compatibles(comision c1, comision c2);
 bool podar(map<string,comision> combinacion);
 string pasarAMinisculas(string cadena);
-int backtracking(map<string,comision> &combinacionPosible, list<map<string,comision>> &combinacionesPosibles, int cantM, list<Materia> materias, int contador);
+int backtracking(map<string,comision> &combinacionPosible,list<map<string,comision>> &combinacionesPosibles,list<Materia>::iterator itMateria,int cantM, list<Materia> materias, int contador);
 void imprimirSolucion(list<map<string,comision>> solucion);
 void imprimirMenu();
 void imprimirMaterias(list<Materia> materias);
@@ -104,6 +130,7 @@ int main()
     /*
     Instancias de la clase Materia
     */
+
     Materia m1 = Materia("Programacion 1");
     Materia m2 = Materia("Web 1");
     Materia m3 = Materia("Ingles 1");
@@ -112,6 +139,7 @@ int main()
     /*
     Agrego comisiones
     */
+
     //Programacion 1
     comision c;
     c.dia = "Lunes";
@@ -171,6 +199,8 @@ int main()
     materias.push_back(m3);
     materias.push_back(m4);
 
+    list<Materia>::iterator it = materias.begin();
+
     /*
     Menu
     */
@@ -190,7 +220,7 @@ int main()
                 cin >> auxiliar;
                 break;
             case 2:
-                backtracking(combinacionPosible,combinacionesPosibles,4,materias,1);
+                backtracking(combinacionPosible,combinacionesPosibles,it,4,materias,1);
                 imprimirSolucion(combinacionesPosibles);
                 combinacionPosible.clear();
                 combinacionesPosibles.clear();
@@ -235,6 +265,7 @@ bool son_compatibles(comision c1,comision c2){
 bool podar(map<string,comision> combinacion){
     map<string,comision>::iterator iteradorC1 = combinacion.begin();
     map<string,comision>::iterator iteradorC2 ;
+
     while(iteradorC1 != combinacion.end()){
         iteradorC2 = combinacion.begin();
         while(iteradorC2 != combinacion.end()){
@@ -249,28 +280,37 @@ bool podar(map<string,comision> combinacion){
     return false;
 }
 
-int backtracking(map<string,comision> &combinacionPosible, list<map<string,comision>> &combinacionesPosibles, int cantM, list<Materia> materias, int contador){
+int backtracking(map<string,comision> &combinacionPosible, list<map<string,comision>> &combinacionesPosibles,list<Materia>::iterator itMateria, int cantM, list<Materia> materias, int contador){
     if(cantM + 1 == contador){
         combinacionesPosibles.push_back(combinacionPosible); //Agrego la combinacion a la lista con todas las combinaciones.
+        itMateria--;
+        Materia m = *itMateria;
+        combinacionPosible.erase(m.getNombreMateria());
         return 1; //Encontre solucion
     }else{
+
         int solucion = 0;
         list<comision> comisiones;
-        Materia m = materias.front();
-        materias.pop_front();
+
+        Materia m = *itMateria;
+
         m.getComisiones(comisiones);
+
         list<comision>::iterator iterador = comisiones.begin();
 
-        while((iterador != comisiones.end()) & (solucion == 0)){
+        itMateria++;
+
+        while((iterador != comisiones.end())){
             combinacionPosible[m.getNombreMateria()] = *iterador;
-            if(!podar(combinacionPosible)){
-                comision c = *iterador;
-                solucion = backtracking(combinacionPosible,combinacionesPosibles,cantM,materias,contador + 1);
-            }
+            if(!podar(combinacionPosible))
+                solucion = backtracking(combinacionPosible,combinacionesPosibles,itMateria,cantM,materias,contador + 1);
             iterador++;
         }
+
+        combinacionPosible.erase(m.getNombreMateria());
+
+        return 0; //No encontre solucion
     }
-    return 0; //No encontre solucion
 }
 
 void imprimirSolucion(list<map<string,comision>> solucion){
